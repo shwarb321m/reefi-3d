@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="نموذج ثلاثي الأبعاد لتغليف ريفي — مربّى اليقطين بماء الزهر: العلبة، كيس الهدية، كرتونة الشحن، والمطربان.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ريفي — التغليف ثلاثي الأبعاد">
+<meta property="og:description" content="شوف العلبة والكيس والكرتونة عم يتجمّعوا قدامك، ولفّهن بإصبعك.">
+<meta property="og:image" content="https://shwarb321m.github.io/reefi-3d/preview.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://shwarb321m.github.io/reefi-3d/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#EFE6D6">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
+<title>ريفي — التغليف ثلاثي الأبعاد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@400;500;700&display=swap">
+<style>
+/* Layout: full-bleed 3D stage, a quiet header strip on top and a control dock at the bottom. Single warm-studio look by design. */
+:root {
+  --stage: #EFE6D6;
+  --ink: #183F32;
+  --ink-soft: #4E6A5E;
+  --gold: #B78B4C;
+  --paper: #FBF6EC;
+  --amber: #D8782B;
+  --line: rgba(24, 63, 50, .14);
+  --display: "Amiri", "Times New Roman", serif;
+  --body: "Tajawal", "Segoe UI", Tahoma, sans-serif;
+  color-scheme: light;
+}
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--stage); color: var(--ink); font-family: var(--body);
+  overflow: hidden; direction: rtl;
+}
+#stage { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+.top {
+  position: fixed; inset: 0 0 auto; z-index: 5; pointer-events: none;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; pointer-events: auto; }
+.brand b { font-family: var(--display); font-size: 34px; line-height: 1; color: var(--ink); }
+.brand span { font-size: 13px; color: var(--ink-soft); letter-spacing: .02em; }
+.tabs {
+  pointer-events: auto; display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: rgba(251, 246, 236, .82); border: 1px solid var(--line); backdrop-filter: blur(8px);
+  max-width: 100%; overflow-x: auto; scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button {
+  font: 500 14px var(--body); color: var(--ink-soft); background: none; border: 0; cursor: pointer;
+  padding: 8px 14px; border-radius: 999px; white-space: nowrap;
+}
+.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.tabs button:focus-visible, .dock button:focus-visible, #t:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; justify-content: center; pointer-events: none;
+}
+.panel {
+  pointer-events: auto; width: min(640px, 100%); box-sizing: border-box;
+  background: rgba(251, 246, 236, .9); border: 1px solid var(--line); border-radius: 18px;
+  backdrop-filter: blur(10px); padding: 12px 14px; display: grid; gap: 10px;
+  box-shadow: 0 10px 30px rgba(24, 63, 50, .10);
+}
+.row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.dock button.play {
+  flex: none; font: 700 15px var(--body); color: var(--paper); background: var(--ink); border: 0;
+  border-radius: 12px; padding: 10px 18px; cursor: pointer; min-width: 112px;
+}
+.dock button.ghost {
+  flex: none; font: 500 13px var(--body); color: var(--ink); background: transparent;
+  border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; cursor: pointer;
+}
+.dock button.ghost[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+#t { flex: 1; min-width: 0; accent-color: var(--gold); direction: ltr; }
+.meta { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--ink-soft); min-width: 0; }
+#step { font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+#dims { font-variant-numeric: tabular-nums; white-space: nowrap; direction: rtl; }
+.loading {
+  position: fixed; inset: 0; display: grid; place-items: center; z-index: 9; background: var(--stage);
+  font: 500 15px var(--body); color: var(--ink-soft); transition: opacity .5s;
+}
+.loading b { display: block; font-family: var(--display); font-size: 54px; color: var(--ink); text-align: center; }
+.hint { font-size: 12px; color: var(--ink-soft); text-align: center; }
+@media (max-width: 560px) {
+  .brand span { display: none; }
+  .tabs { width: 100%; }
+  .dock button.play { min-width: 92px; padding: 10px 12px; }
+  .hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .loading { transition: none; } }
+</style>
+
+</head>
+<body>
+<canvas id="stage" aria-label="نموذج ثلاثي الأبعاد لتغليف ريفي"></canvas>
+<div class="loading" id="loading"><div><b>ريفي</b>عم نجهّز النماذج…</div></div>
+
+<header class="top">
+  <div class="brand"><b>ريفي</b><span>مربّى اليقطين بماء الزهر · نموذج التغليف</span></div>
+  <nav class="tabs" id="tabs" aria-label="اختيار القطعة">
+    <button type="button" id="tab-carton" data-v="carton" aria-pressed="true">العلبة الفردية</button>
+    <button type="button" id="tab-bag" data-v="bag" aria-pressed="false">كيس الهدية</button>
+    <button type="button" id="tab-shipper" data-v="shipper" aria-pressed="false">كرتونة الشحن</button>
+    <button type="button" id="tab-jar" data-v="jar" aria-pressed="false">المطربان</button>
+    <button type="button" id="tab-all" data-v="all" aria-pressed="false">المجموعة كاملة</button>
+  </nav>
+</header>
+
+<div class="dock">
+  <div class="panel">
+    <div class="row">
+      <button type="button" class="play" id="play">▶ تجميع</button>
+      <input type="range" id="t" min="0" max="1000" value="0" aria-label="مراحل التجميع">
+      <button type="button" class="ghost" id="spin" aria-pressed="true" title="دوران تلقائي بعد التجميع">دوران</button>
+    </div>
+    <div class="meta"><span id="step">الفردة مفرودة متل ما بتطلع من المطبعة</span><span id="dims"></span></div>
+    <div class="hint">اسحب لتلف النموذج · قرّب بإصبعين أو بعجلة الماوس</div>
+  </div>
+</div>
+
+<script src="three.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  var S = 0.01;                       // 1 scene unit = 100 mm
+  var D2R = Math.PI / 180;
+  var canvas = document.getElementById("stage");
+
+  // soft studio light box used only as a reflection environment
+  function studioRoom() {
+    var room = new THREE.Scene();
+    var box = new THREE.BoxGeometry(1, 1, 1);
+    var walls = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: 0x8a8070, side: THREE.BackSide }));
+    walls.scale.set(20, 10, 20); walls.position.y = 4; room.add(walls);
+    [[0, 8.8, 0, 9, 0.2, 9, 3.2], [-9.8, 4, 0, 0.2, 5, 8, 2.2], [9.8, 5, -3, 0.2, 4, 5, 1.4], [0, 4, 9.8, 7, 4, 0.2, 1.2]].forEach(function (q) {
+      var m = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: new THREE.Color(1, 0.97, 0.9).multiplyScalar(q[6]) }));
+      m.position.set(q[0], q[1], q[2]); m.scale.set(q[3], q[4], q[5]); room.add(m);
+    });
+    return room;
+  }
+
+  // small orbit camera rig: drag to turn, wheel or pinch to zoom, damped, optional auto-turn
+  function Orbit(cam, el) {
+    var self = this, sph = new THREE.Spherical(), off = new THREE.Vector3(), ptrs = {}, pinch = 0, vT = 0, vP = 0, zoomK = 1;
+    this.target = new THREE.Vector3(); this.autoRotate = false; this.autoRotateSpeed = 1.1;
+    var handlers = [];
+    this.addEventListener = function (n, f) { if (n === "start") handlers.push(f); };
+    function fire() { handlers.forEach(function (f) { f(); }); }
+    el.addEventListener("pointerdown", function (e) {
+      el.setPointerCapture(e.pointerId); ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; fire();
+      var k = Object.keys(ptrs); if (k.length === 2) pinch = dist();
+    });
+    function dist() { var k = Object.keys(ptrs), a = ptrs[k[0]], b = ptrs[k[1]]; return Math.hypot(a.x - b.x, a.y - b.y); }
+    el.addEventListener("pointermove", function (e) {
+      var p = ptrs[e.pointerId]; if (!p) return;
+      var dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+      var k = Object.keys(ptrs);
+      if (k.length === 1) { vT -= dx * 0.0055; vP -= dy * 0.0055; }
+      else if (k.length === 2) { var d = dist(); if (pinch) zoomK *= pinch / d; pinch = d; }
+    });
+    function up(e) { delete ptrs[e.pointerId]; pinch = 0; }
+    el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
+    el.addEventListener("wheel", function (e) { e.preventDefault(); fire(); zoomK *= Math.exp(e.deltaY * 0.0012); }, { passive: false });
+    this.update = function () {
+      off.copy(cam.position).sub(self.target); sph.setFromVector3(off);
+      sph.theta += vT - (self.autoRotate ? 0.0032 * self.autoRotateSpeed : 0); sph.phi += vP;
+      sph.phi = Math.min(Math.PI * 0.495, Math.max(0.12, sph.phi));
+      sph.radius = Math.min(60, Math.max(0.4, sph.radius * zoomK));
+      vT *= 0.9; vP *= 0.9; zoomK = 1 + (zoomK - 1) * 0.0;
+      off.setFromSpherical(sph); cam.position.copy(self.target).add(off); cam.lookAt(self.target);
+    };
+  }
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+
+  var STAGE = 0xEFE6D6;
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(STAGE);
+  scene.fog = new THREE.Fog(STAGE, 20, 60);
+  var pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(studioRoom(), 0.04).texture;
+  scene.environmentIntensity = 0.85;
+
+  var camera = new THREE.PerspectiveCamera(32, 1, 0.05, 200);
+  camera.position.set(3.2, 2.2, 6);
+  var controls = new Orbit(camera, canvas);
+
+  scene.add(new THREE.HemisphereLight(0xfff6e8, 0xcbbf9f, 0.9));
+  var sun = new THREE.DirectionalLight(0xfff1dc, 2.6);
+  sun.position.set(4, 8, 5);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.bias = -0.0004;
+  sun.shadow.normalBias = 0.02;
+  sun.shadow.radius = 4;
+  scene.add(sun, sun.target);
+
+  var ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400),
+    new THREE.MeshStandardMaterial({ color: STAGE, roughness: 1, metalness: 0 }));
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  var maxAniso = renderer.capabilities.getMaxAnisotropy();
+  var loader = new THREE.TextureLoader();
+  function tex(url) {
+    return new Promise(function (ok, bad) {
+      loader.load(url, function (t) {
+        t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso; ok(t);
+      }, undefined, bad);
+    });
+  }
+  function ease(p) { p = Math.min(1, Math.max(0, p)); return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
+  function span(t, a, b) { return ease((t - a) / (b - a)); }
+
+  // ------------------------------------------------------------------ fold engine
+  // Each panel lives in dieline millimetres (y down). A node hinges on its parent along a straight fold.
+  function buildFold(cfg, map) {
+    var outer = new THREE.MeshStandardMaterial({ map: map, roughness: cfg.rough || 0.62, metalness: 0, side: THREE.FrontSide });
+    outer.shadowSide = THREE.DoubleSide;
+    var inner = new THREE.MeshStandardMaterial({ color: cfg.inner, roughness: 0.92, metalness: 0, side: THREE.BackSide });
+    inner.shadowSide = THREE.DoubleSide;
+    var im = cfg.img, nodes = {}, list = [], meshes = [];
+    var root = new THREE.Group();
+    cfg.panels.forEach(function (d) {
+      var piv = new THREE.Group();
+      var par = d.parent ? nodes[d.parent] : null;
+      if (par) {
+        piv.position.set((d.hinge[0] - par.d.hinge[0]) * S, -(d.hinge[1] - par.d.hinge[1]) * S, 0);
+        par.piv.add(piv);
+      } else root.add(piv);
+      var r = d.rect, w = r[2] - r[0], h = r[3] - r[1];
+      var g = new THREE.PlaneGeometry(w * S, h * S, 1, 1);
+      g.translate(((r[0] + r[2]) / 2 - d.hinge[0]) * S, -((r[1] + r[3]) / 2 - d.hinge[1]) * S, 0);
+      var uv = g.attributes.uv;
+      for (var i = 0; i < uv.count; i++) {
+        var X = r[0] + uv.getX(i) * w, Y = r[3] - uv.getY(i) * h;
+        uv.setXY(i, (X + im.ox) * im.k / im.w, 1 - (Y + im.oy) * im.k / im.h);
+      }
+      var a = new THREE.Mesh(g, outer), b = new THREE.Mesh(g, inner);
+      a.castShadow = b.castShadow = true; a.receiveShadow = b.receiveShadow = true;
+      piv.add(a, b);
+      var n = { d: d, piv: piv };
+      nodes[d.id] = n; list.push(n); meshes.push(a);
+    });
+    return {
+      root: root, nodes: nodes, meshes: meshes,
+      set: function (t) {
+        list.forEach(function (n) {
+          var d = n.d; if (!d.axis) return;
+          n.piv.rotation[d.axis] = d.ang * D2R * span(t, d.t[0], d.t[1]);
+        });
+      }
+    };
+  }
+
+  // ------------------------------------------------------------------ jar
+  var JR = 34.5, LR = 34.85, LAB_W = 210, LAB_H = 63, LAB_Y = 24;
+  var glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, roughness: 0.05, transmission: 1,
+    thickness: 0.06, ior: 1.5, envMapIntensity: 1.2, clearcoat: 1, clearcoatRoughness: 0.05, side: THREE.DoubleSide });
+  var jamMat = new THREE.MeshPhysicalMaterial({ color: 0xC4601A, roughness: 0.18, metalness: 0, clearcoat: 0.8,
+    clearcoatRoughness: 0.1, sheen: 0.3, sheenColor: new THREE.Color(0xF0A040) });
+  var lidMat = new THREE.MeshStandardMaterial({ color: 0x183F32, roughness: 0.42, metalness: 0.55 });
+  var goldMat = new THREE.MeshStandardMaterial({ color: 0xC69A56, roughness: 0.3, metalness: 0.9 });
+  var paperBack = new THREE.MeshStandardMaterial({ color: 0xF4EEDF, roughness: 0.9, side: THREE.BackSide });
+  function lathe(pts, seg) { return new THREE.LatheGeometry(pts.map(function (p) { return new THREE.Vector2(p[0] * S, p[1] * S); }), seg || 72); }
+  var glassGeo = lathe([[0, 0.6], [30, 0.6], [33.6, 1.8], [34.5, 5], [34.5, 100], [33.6, 105], [31.2, 109], [30.6, 112], [30.6, 119], [29.4, 119]]);
+  var jamGeo = lathe([[0, 2.2], [30.5, 2.2], [33, 4.5], [33.2, 99], [31.5, 103], [0, 103.6]]);
+  var lidGeo = new THREE.CylinderGeometry(33.4 * S, 33.6 * S, 15 * S, 96, 1, false);
+  lidGeo.translate(0, 120.5 * S, 0);
+  var lidTop = new THREE.CircleGeometry(33.4 * S, 96); lidTop.rotateX(-Math.PI / 2); lidTop.translate(0, 128.05 * S, 0);
+  var ringGeo = new THREE.TorusGeometry(27 * S, 0.55 * S, 10, 120); ringGeo.rotateX(Math.PI / 2); ringGeo.translate(0, 128.1 * S, 0);
+  var ring2 = new THREE.TorusGeometry(24.5 * S, 0.3 * S, 8, 120); ring2.rotateX(Math.PI / 2); ring2.translate(0, 128.1 * S, 0);
+
+  function labelGeo(map) {
+    var g = new THREE.PlaneGeometry(LAB_W * S, LAB_H * S, 120, 1);
+    var uv = g.attributes.uv, k = 2551 / 216;
+    for (var i = 0; i < uv.count; i++) {
+      uv.setXY(i, (3 + uv.getX(i) * LAB_W) / 216, 1 - (3 + (1 - uv.getY(i)) * LAB_H) / 69);
+    }
+    g.userData.s = [];
+    var p = g.attributes.position;
+    for (i = 0; i < p.count; i++) g.userData.s.push(p.getX(i) / S);
+    return g;
+  }
+  function wrapLabel(g, w) {
+    var p = g.attributes.position, s = g.userData.s, L = w * LAB_W / 2;
+    for (var i = 0; i < p.count; i++) {
+      var si = s[i], sg = si < 0 ? -1 : 1, x, z;
+      if (Math.abs(si) <= L) { var a = si / LR; x = LR * Math.sin(a); z = LR * Math.cos(a); }
+      else {
+        var aL = sg * L / LR, ex = Math.abs(si) - L;
+        x = LR * Math.sin(aL) + sg * Math.cos(aL) * ex;
+        z = LR * Math.cos(aL) - sg * Math.sin(aL) * ex;
+      }
+      p.setX(i, x * S); p.setZ(i, z * S);
+    }
+    p.needsUpdate = true; g.computeVertexNormals(); g.computeBoundingSphere();
+  }
+  function makeJar(labelMap, sharedLabel) {
+    var j = new THREE.Group();
+    var glass = new THREE.Mesh(glassGeo, glassMat);
+    var jam = new THREE.Mesh(jamGeo, jamMat); jam.castShadow = true;
+    var lid = new THREE.Group();
+    var l1 = new THREE.Mesh(lidGeo, lidMat), l2 = new THREE.Mesh(lidTop, lidMat);
+    l1.castShadow = l2.castShadow = true;
+    lid.add(l1, l2, new THREE.Mesh(ringGeo, goldMat), new THREE.Mesh(ring2, goldMat));
+    var lg = sharedLabel || labelGeo(labelMap);
+    var labMat = new THREE.MeshStandardMaterial({ map: labelMap, roughness: 0.55, side: THREE.FrontSide });
+    var lab = new THREE.Group();
+    var la = new THREE.Mesh(lg, labMat), lb = new THREE.Mesh(lg, paperBack);
+    la.castShadow = true;
+    lab.add(la, lb); lab.position.y = (LAB_Y + LAB_H / 2) * S;
+    j.add(jam, glass, lab, lid);
+    return { group: j, lid: lid, label: lab, labelGeo: lg, glass: glass };
+  }
+
+  // ------------------------------------------------------------------ models
+  function M(id, title, dims, built, steps, dur) { return { id: id, title: title, dims: dims, steps: steps, dur: dur, built: built }; }
+
+  function cartonModel(map, jarMap, wrapped) {
+    var f = buildFold({
+      img: { k: 3000 / 410, ox: 8, oy: 11, w: 3000, h: 2378 }, inner: 0xF3EEE4, rough: 0.55,
+      panels: [
+        { id: "front", rect: [204, 113, 299, 248], hinge: [204, 248] },
+        { id: "sideR", parent: "front", rect: [299, 113, 394, 248], hinge: [299, 248], axis: "y", ang: 90, t: [0.1, 0.3] },
+        { id: "sideL", parent: "front", rect: [109, 113, 204, 248], hinge: [204, 248], axis: "y", ang: -90, t: [0.1, 0.3] },
+        { id: "back", parent: "sideL", rect: [14, 113, 109, 248], hinge: [109, 248], axis: "y", ang: -90, t: [0.2, 0.4] },
+        { id: "glue", parent: "back", rect: [0, 117, 14, 244], hinge: [14, 248], axis: "y", ang: -91.5, t: [0.02, 0.1] },
+        { id: "botSL", parent: "sideL", rect: [109, 248, 204, 288.6], hinge: [109, 248], axis: "x", ang: 91.6, t: [0.44, 0.52] },
+        { id: "botSR", parent: "sideR", rect: [299, 248, 394, 288.6], hinge: [299, 248], axis: "x", ang: 91.6, t: [0.44, 0.52] },
+        { id: "botB", parent: "back", rect: [14, 248, 109, 306], hinge: [14, 248], axis: "x", ang: 90.9, t: [0.5, 0.58] },
+        { id: "botF", parent: "front", rect: [204, 248, 299, 306], hinge: [204, 248], axis: "x", ang: 90, t: [0.56, 0.64] },
+        { id: "dustL", parent: "sideL", rect: [109, 73, 204, 113], hinge: [109, 113], axis: "x", ang: -91.6, t: [0.78, 0.86] },
+        { id: "dustR", parent: "sideR", rect: [299, 73, 394, 113], hinge: [299, 113], axis: "x", ang: -91.6, t: [0.78, 0.86] },
+        { id: "lid", parent: "back", rect: [14, 18, 109, 113], hinge: [14, 113], axis: "x", ang: -90, t: [0.85, 0.96] },
+        { id: "tuck", parent: "lid", rect: [16, 0, 107, 18], hinge: [14, 18], axis: "x", ang: -92, t: [0.89, 0.98] }
+      ]
+    }, map);
+    var jar = makeJar(jarMap, wrapped);
+    jar.group.position.set(47.5 * S, 0, -47.5 * S);
+    jar.group.scale.setScalar(0.98);
+    f.nodes.front.piv.add(jar.group);
+    var drop = 2.4;
+    return M("carton", "العلبة الفردية", "٩٥ × ٩٥ × ١٣٥ مم", {
+      root: f.root, meshes: f.meshes,
+      set: function (t) {
+        f.set(t);
+        var p = span(t, 0.66, 0.77);
+        jar.group.visible = t > 0.655;
+        jar.group.position.y = (1 - p) * drop + 0.012;
+      }
+    }, [[0, "الفردة مفرودة متل ما بتطلع من المطبعة"], [0.02, "لسان اللصق والجوانب"], [0.42, "إقفال القاع"],
+        [0.65, "المطربان بينزل جوّا العلبة"], [0.77, "الأجنحة، والغطاء، واللسان"], [0.985, "العلبة جاهزة على الرف"]], 9);
+  }
+
+  function bagModel(map) {
+    var P = [
+      { id: "front", rect: [20, 40, 200, 280], hinge: [20, 280] },
+      { id: "side1", parent: "front", rect: [200, 40, 300, 280], hinge: [200, 280], axis: "y", ang: 90, t: [0.22, 0.42] },
+      { id: "back", parent: "side1", rect: [300, 40, 480, 280], hinge: [300, 280], axis: "y", ang: 90, t: [0.28, 0.46] },
+      { id: "side2", parent: "back", rect: [480, 40, 580, 280], hinge: [480, 280], axis: "y", ang: 90, t: [0.34, 0.5] },
+      { id: "glue", parent: "front", rect: [0, 46, 20, 274], hinge: [20, 280], axis: "y", ang: -91.5, t: [0.16, 0.24] }
+    ];
+    [["front", 20, 200], ["side1", 200, 300], ["back", 300, 480], ["side2", 480, 580]].forEach(function (q, i) {
+      P.push({ id: "top_" + q[0], parent: q[0], rect: [q[1], 0, q[2], 40], hinge: [P[i].hinge[0], 40], axis: "x", ang: -176, t: [0.03, 0.15] });
+    });
+    [["side1", 200, 300, 91.6, 0.54], ["side2", 480, 580, 91.6, 0.54], ["back", 300, 480, 90.9, 0.6], ["front", 20, 200, 90, 0.66]].forEach(function (q) {
+      var par = P.filter(function (x) { return x.id === q[0]; })[0];
+      P.push({ id: "bot_" + q[0], parent: q[0], rect: [q[1], 280, q[2], 345], hinge: [par.hinge[0], 280], axis: "x", ang: q[3], t: [q[4], q[4] + 0.1] });
+    });
+    var f = buildFold({ img: { k: 3000 / 586, ox: 3, oy: 3, w: 3000, h: 1797 }, inner: 0xB89065, rough: 0.8, panels: P }, map);
+    var ropeMat = new THREE.MeshStandardMaterial({ color: 0xA77D4C, roughness: 0.85 });
+    var holeMat = new THREE.MeshStandardMaterial({ color: 0x3a2a1a, roughness: 1 });
+    var ropes = [];
+    function rope(node, hx, hy, c) {
+      var pts = [[c - 38, 65, -1.6], [c - 40, 30, -0.8], [c - 30, -40, 0], [c, -62, 0], [c + 30, -40, 0], [c + 40, 30, -0.8], [c + 38, 65, -1.6]]
+        .map(function (p) { return new THREE.Vector3((p[0] - hx) * S, -(p[1] - hy) * S, p[2] * S); });
+      var g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 90, 2.4 * S, 10, false);
+      var m = new THREE.Mesh(g, ropeMat); m.castShadow = true;
+      node.piv.add(m); ropes.push(m);
+      [c - 38, c + 38].forEach(function (x) {
+        var h = new THREE.Mesh(new THREE.CircleGeometry(3 * S, 20), holeMat);
+        h.position.set((x - hx) * S, -(65 - hy) * S, 0.0004); node.piv.add(h);
+      });
+    }
+    rope(f.nodes.front, 20, 280, 110);
+    rope(f.nodes.back, 300, 280, 390);
+    return M("bag", "كيس الهدية", "١٨٠ × ١٠٠ × ٢٤٠ مم", {
+      root: f.root, meshes: f.meshes,
+      set: function (t) {
+        f.set(t);
+        var p = span(t, 0.8, 0.97);
+        ropes.forEach(function (m) {
+          m.visible = p > 0;
+          m.geometry.setDrawRange(0, Math.floor(m.geometry.index.count * p / 6) * 6);
+        });
+      }
+    }, [[0, "الفردة مفرودة"], [0.02, "طي الحافة العلوية لجوّا"], [0.16, "اللصق وتشكيل الجسم"], [0.52, "تسكير القاع"],
+        [0.78, "تركيب المسكات"], [0.985, "الكيس جاهز للهدية"]], 8);
+  }
+
+  function shipperModel(map, jarMap, wrapped) {
+    var P = [
+      { id: "l1", rect: [35, 155, 445, 315], hinge: [35, 315] },
+      { id: "s1", parent: "l1", rect: [445, 155, 755, 315], hinge: [445, 315], axis: "y", ang: 90, t: [0.08, 0.28] },
+      { id: "l2", parent: "s1", rect: [755, 155, 1165, 315], hinge: [755, 315], axis: "y", ang: 90, t: [0.16, 0.36] },
+      { id: "s2", parent: "l2", rect: [1165, 155, 1475, 315], hinge: [1165, 315], axis: "y", ang: 90, t: [0.24, 0.42] },
+      { id: "glue", parent: "l1", rect: [0, 163, 35, 307], hinge: [35, 315], axis: "y", ang: -91.5, t: [0.02, 0.08] }
+    ];
+    var hx = { l1: 35, s1: 445, l2: 755, s2: 1165 };
+    [["l1", 35, 442, 1], ["s1", 448, 752, 0], ["l2", 758, 1162, 1], ["s2", 1168, 1475, 0]].forEach(function (q) {
+      var lng = q[3] === 1;
+      P.push({ id: "bot_" + q[0], parent: q[0], rect: [q[1], 315, q[2], 470], hinge: [hx[q[0]], 315], axis: "x",
+        ang: lng ? 90 : 91.6, t: lng ? [0.52, 0.6] : [0.45, 0.53] });
+      P.push({ id: "top_" + q[0], parent: q[0], rect: [q[1], 0, q[2], 155], hinge: [hx[q[0]], 155], axis: "x",
+        ang: lng ? -90 : -91.6, t: lng ? [0.88, 0.97] : [0.8, 0.88] });
+    });
+    var f = buildFold({ img: { k: 4000 / 1481, ox: 3, oy: 3, w: 4000, h: 1286 }, inner: 0xB08A5B, rough: 0.9, panels: P }, map);
+    var jars = [];
+    for (var i = 0; i < 4; i++) for (var j = 0; j < 3; j++) {
+      var jr = makeJar(jarMap, wrapped);
+      jr.group.position.set(51.25 * (2 * i + 1) * S, 0, -(310 / 6) * (2 * j + 1) * S);
+      jr.group.rotation.y = (i * 3 + j) * 0.7;
+      f.nodes.l1.piv.add(jr.group);
+      jars.push({ g: jr.group, k: i * 3 + j });
+    }
+    return M("shipper", "كرتونة الشحن", "٤١٠ × ٣١٠ × ١٦٠ مم · ١٢ مطربان", {
+      root: f.root, meshes: f.meshes,
+      set: function (t) {
+        f.set(t);
+        jars.forEach(function (o) {
+          var a = 0.6 + o.k * 0.012, p = span(t, a, a + 0.07);
+          o.g.visible = t > a - 0.003;
+          o.g.position.y = (1 - p) * 3 + 0.012;
+        });
+      }
+    }, [[0, "الفردة مفرودة"], [0.02, "اللصق وتشكيل الجسم"], [0.44, "تسكير القاع"], [0.6, "تعبئة ١٢ مطربان"],
+        [0.79, "تسكير الأجنحة"], [0.985, "الكرتونة جاهزة للشحن"]], 10);
+  }
+
+  function jarModel(map) {
+    var jr = makeJar(map, null);
+    var g = new THREE.Group(); g.add(jr.group);
+    return M("jar", "المطربان", "٤٠٠ غ · ملصقة ٢١٠ × ٦٣ مم", {
+      root: g, meshes: [jr.glass, jr.label.children[0], jr.lid.children[0]],
+      set: function (t) {
+        var a = span(t, 0, 0.22), w = span(t, 0.2, 0.72), l = span(t, 0.72, 0.96);
+        wrapLabel(jr.labelGeo, w);
+        jr.label.position.z = (1 - a) * 0.9;
+        jr.label.position.y = (LAB_Y + LAB_H / 2) * S + (1 - a) * 0.15;
+        jr.lid.position.y = (1 - l) * 0.9;
+        jr.lid.rotation.y = (1 - l) * Math.PI * 3;
+      }
+    }, [[0, "الملصقة جاهزة"], [0.2, "لفّ الملصقة على المطربان"], [0.72, "تسكير الغطاء"], [0.985, "المطربان جاهز"]], 6);
+  }
+
+  // ------------------------------------------------------------------ scene plumbing
+  var models = {}, order = ["shipper", "bag", "carton", "jar"];
+  var box3 = new THREE.Box3(), tmp = new THREE.Box3(), v3 = new THREE.Vector3(), c3 = new THREE.Vector3();
+  function install(m) {
+    m.holder = new THREE.Group(); m.inner = new THREE.Group();
+    m.holder.add(m.inner); m.inner.add(m.built.root); scene.add(m.holder);
+    m.built.set(1); m.inner.updateMatrixWorld(true);
+    bbox(m); box3.getCenter(c3);
+    m.inner.position.x = -c3.x; m.inner.position.z = -c3.z;
+    box3.getSize(v3); m.size = v3.clone();
+    m.t = 0; m.built.set(0);
+    models[m.id] = m;
+  }
+  function bbox(m) {
+    box3.makeEmpty();
+    m.built.meshes.forEach(function (o) { o.updateMatrixWorld(true); tmp.setFromObject(o); box3.union(tmp); });
+    return box3;
+  }
+  function settle(m) {
+    m.inner.updateMatrixWorld(true);
+    bbox(m);
+    m.inner.position.y += -box3.min.y + 0.001;
+  }
+
+  var snap = true, view = "carton", playing = 0, autoCam = true, spin = true;
+  var tEl = document.getElementById("t"), playEl = document.getElementById("play"), stepEl = document.getElementById("step"),
+      dimsEl = document.getElementById("dims"), spinEl = document.getElementById("spin");
+
+  function layoutAll() {
+    var x = 0, gap = 0.7;
+    var total = order.reduce(function (s, id) { return s + models[id].size.x; }, 0) + gap * (order.length - 1);
+    x = -total / 2;
+    order.forEach(function (id) {
+      var m = models[id];
+      m.holder.position.set(x + m.size.x / 2, 0, id === "shipper" ? -0.4 : 0.3);
+      x += m.size.x + gap;
+    });
+  }
+  function setView(v) {
+    view = v; playing = 0; autoCam = true; snap = true;
+    document.querySelectorAll("#tabs button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.v === v)); });
+    var all = v === "all";
+    order.forEach(function (id) {
+      var m = models[id];
+      m.holder.visible = all || id === v;
+      if (all) { m.t = 1; } else if (id === v) { m.t = 0; m.holder.position.set(0, 0, 0); }
+      m.built.set(m.t); settle(m);
+    });
+    if (all) layoutAll();
+    tEl.parentElement.style.visibility = all ? "hidden" : "visible";
+    if (all) { stepEl.textContent = "طقم ريفي كامل بالمقاسات الحقيقية"; dimsEl.textContent = "كرتونة · كيس · علبة · مطربان"; }
+    else { dimsEl.textContent = models[v].dims; updateUI(); setTimeout(function () { if (view === v && models[v].t === 0) start(1); }, 900); }
+    fitShadow();
+  }
+  function start(dir) { playing = dir; autoCam = true; updateUI(); }
+  function updateUI() {
+    if (view === "all") return;
+    var m = models[view];
+    tEl.value = Math.round(m.t * 1000);
+    playEl.textContent = playing ? "❚❚ إيقاف" : (m.t >= 1 ? "◀ فرد" : "▶ تجميع");
+    var s = m.steps[0][1];
+    m.steps.forEach(function (q) { if (m.t >= q[0]) s = q[1]; });
+    stepEl.textContent = s;
+  }
+  playEl.addEventListener("click", function () {
+    if (view === "all") return;
+    var m = models[view];
+    if (playing) { playing = 0; } else { start(m.t >= 1 ? -1 : 1); }
+    updateUI();
+  });
+  tEl.addEventListener("input", function () {
+    if (view === "all") return;
+    var m = models[view]; playing = 0; m.t = tEl.value / 1000; m.built.set(m.t); settle(m); updateUI();
+  });
+  spinEl.addEventListener("click", function () { spin = !spin; spinEl.setAttribute("aria-pressed", String(spin)); });
+  document.getElementById("tabs").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (b) setView(b.dataset.v);
+  });
+  controls.addEventListener("start", function () { autoCam = false; });
+
+  function visibleBox() {
+    var out = new THREE.Box3();
+    order.forEach(function (id) {
+      var m = models[id]; if (!m.holder.visible) return;
+      m.holder.updateMatrixWorld(true); out.union(bbox(m).clone());
+    });
+    return out;
+  }
+  function fitShadow() {
+    var b = visibleBox(), s = new THREE.Vector3(); b.getSize(s);
+    var r = Math.max(s.x, s.y, s.z) * 0.9 + 1.5;
+    var c = sun.shadow.camera; c.left = -r; c.right = r; c.top = r; c.bottom = -r; c.near = 0.1; c.far = 40;
+    c.updateProjectionMatrix();
+  }
+
+  var tgt = new THREE.Vector3(0, 0.6, 0), last = performance.now(), dirV = new THREE.Vector3();
+  function frame(now) {
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (view !== "all" && playing) {
+      var m = models[view];
+      m.t = Math.min(1, Math.max(0, m.t + playing * dt / m.dur));
+      m.built.set(m.t); settle(m);
+      if (m.t <= 0 || m.t >= 1) playing = 0;
+      updateUI();
+    }
+    var b = visibleBox(), ctr = new THREE.Vector3(), sz = new THREE.Vector3();
+    b.getCenter(ctr); b.getSize(sz);
+    sun.position.set(ctr.x + 4, 8, ctr.z + 5); sun.target.position.copy(ctr);
+    if (autoCam && !b.isEmpty()) {
+      var rad = sz.length() / 2;
+      ctr.y -= rad * 0.14;
+      var kf = snap ? 1 : 1 - Math.exp(-dt * 4.5);
+      tgt.lerp(ctr, kf);
+      controls.target.copy(tgt);
+      var fov = camera.fov * D2R, aspect = camera.aspect;
+      var fit = rad / Math.sin(Math.min(fov, 2 * Math.atan(Math.tan(fov / 2) * aspect)) / 2) * 1.22;
+      dirV.copy(camera.position).sub(controls.target).normalize();
+      var d = camera.position.distanceTo(controls.target);
+      camera.position.copy(controls.target).addScaledVector(dirV, d + (fit - d) * kf);
+      snap = false;
+    }
+    var done = view === "all" || models[view].t >= 1;
+    controls.autoRotate = spin && done && !playing;
+    controls.update();
+    var cd = camera.position.distanceTo(controls.target);
+    scene.fog.near = cd * 1.6; scene.fog.far = cd * 5;
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    var w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", resize);
+
+  Promise.all(["tex/carton.jpg", "tex/bag.jpg", "tex/shipper.jpg", "tex/jar.jpg"].map(tex)).then(function (T) {
+    var wrapped = labelGeo(T[3]); wrapLabel(wrapped, 1);
+    install(cartonModel(T[0], T[3], wrapped));
+    install(bagModel(T[1]));
+    install(shipperModel(T[2], T[3], wrapped));
+    install(jarModel(T[3]));
+    resize();
+    camera.position.set(2.6, 1.6, 4.4);
+    setView("carton");
+    var L = document.getElementById("loading"); L.style.opacity = "0"; setTimeout(function () { L.hidden = true; }, 500);
+    requestAnimationFrame(frame);
+    window.__reefi = { models: models, setView: setView, set: function (v, t) { var m = models[v]; m.t = t; m.built.set(t); settle(m); updateUI(); },
+      stop: function () { playing = 0; }, cam: camera, controls: controls, spin: function (x) { spin = x; } };
+  }).catch(function (e) {
+    document.getElementById("loading").innerHTML = "<div>ما قدرت حمّل صور التصاميم. حدّث الصفحة.</div>";
+    console.error(e);
+  });
+})();
+</script>
+
+</body>
+</html>
